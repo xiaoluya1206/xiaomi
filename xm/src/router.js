@@ -9,6 +9,7 @@ import Order from './pages/order.vue'
 import OrderConfirm from './pages/orderConfirm.vue'
 import OrderList from './pages/orderList.vue'
 import OrderPay from './pages/orderPay.vue'
+import Alipay from './pages/alipay.vue'
 
 Vue.use(Router)
 
@@ -18,6 +19,8 @@ export default new Router({
             path: '/',
             name: 'home',
             component: Home,
+            // 重定向 默认跳转index
+            redirect: '/index',
             // home下的子路由
             children: [{
                     path: '/index',
@@ -48,22 +51,26 @@ export default new Router({
             name: 'order',
             component: Order,
             children: [{
-                    path: '/confirm',
+                    path: 'confirm',
                     name: 'order-confirm',
                     component: OrderConfirm,
                 },
                 {
-                    path: '/list',
+                    path: 'list',
                     name: 'order-list',
                     component: OrderList,
                 },
                 {
-                    path: '/pay',
+                    path: 'pay',
                     name: 'order-pay',
                     component: OrderPay,
+                },
+                {
+                    path: 'alipay',
+                    name: 'alipay',
+                    component: Alipay,
                 }
             ]
         },
     ]
-
 })

@@ -1,3 +1,8 @@
 <template>
-  <div class="product"></div>
+  <div class="product">product</div>
 </template>
+<script>
+export default {
+  name: "product",
+};
+</script>
