@@ -19,7 +19,7 @@ export default {
             window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(val))
         }
     },
-    // 获取值 获取某个模块下的属性 key是属性
+    // 获取值 获取某个模块下的属性 key是属性user下的userName
     // 例子：{"user":{"userName":"jack","age":30,"sex":1}}
     getItem(key, module_name) {
         if (module_name) {
@@ -35,5 +35,14 @@ export default {
         return JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) || '{}');
     },
     // 清空某一个值
-    clear() {}
+    clear(key, module_name) {
+        let val = this.getStorage();
+        if (module_name) {
+            delete val[module_name][key];
+        } else {
+            delete val[key];
+        }
+        // 重新写入
+        window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(val));
+    }
 }
