@@ -3,6 +3,7 @@ import Vue from 'vue'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import App from './App.vue'
 
 //   例：/a/b  访问时：/api/a/b => /a/b
 axios.defaults.baseURL = '/api';
@@ -22,7 +23,6 @@ axios.interceptors.response.use(function(response) {
 })
 
 Vue.use(VueAxios, axios);
-import App from './App.vue'
 
 
 Vue.config.productionTip = false
