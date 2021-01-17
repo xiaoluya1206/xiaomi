@@ -2,13 +2,53 @@
   <div class="index">
     <div class="container">
       <div class="swiper-box">
+        <!-- 菜单 -->
+        <div class="nav-menu">
+          <ul class="menu-warp">
+            <li class="menu-item">
+              <a href="javascript:;">手机 电话卡</a>
+              <div class="children">
+                <!-- 外层循环6次  内层循环得到每一个外层的内部的元素 -->
+                <ul v-for="(item, index) in menuList" :key="index">
+                  <li v-for="(sub, i) in item" :key="i">
+                    <a :href="sub ? `/#/product/${sub.id}` : ''">
+                      <img :src="sub ? sub.img : '/imgs/item-box-1.png'" />
+                      {{ sub ? sub.name : "小米9" }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">电视 盒子</a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">笔记本 平板</a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">家电 插线板</a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">出行 穿戴</a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">智能 路由器</a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">电源 配件</a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:;">生活 箱包</a>
+            </li>
+          </ul>
+        </div>
         <swiper :options="swiperOption">
           <swiper-slide v-for="(item, index) in slideList" :key="index">
             <a :href="`/#/product/${item.id}`">
               <img :src="item.img" />
             </a>
           </swiper-slide>
-          <!-- Optional controls -->
+          <!-- 分页 左右箭头 -->
           <div class="swiper-pagination" slot="pagination"></div>
           <div class="swiper-button-prev" slot="button-prev"></div>
           <div class="swiper-button-next" slot="button-next"></div>
@@ -47,8 +87,8 @@ export default {
         // 分页器
         pagination: {
           el: ".swiper-pagination",
-        //   切换
-          clickable:true
+          //   切换
+          clickable: true,
         },
         // 前进后退
         navigation: {
@@ -78,15 +118,114 @@ export default {
           img: "/imgs/slider/slide-5.jpg",
         },
       ],
+      menuList: [
+        [
+          {
+            id: 30,
+            img: "/imgs/item-box-1.png",
+            name: "小米cc9",
+          },
+          {
+            id: 31,
+            img: "/imgs/item-box-2.png",
+            name: "小米8青春版",
+          },
+          {
+            id: 32,
+            img: "/imgs/item-box-3.jpg",
+            name: "Redmi K20 Pro",
+          },
+          {
+            id: 33,
+            img: "/imgs/item-box-4.jpg",
+            name: "移动4G专区",
+          },
+        ],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ],
     };
   },
 };
 </script>
 <style lang="scss">
+@import "../assets/scss/mixin.scss";
+@import "../assets/scss/config.scss";
 .index {
   .swiper-box {
+    .nav-menu {
+      position: absolute;
+      height: 451px;
+      width: 264px;
+      z-index: 9;
+      padding: 26px 0;
+      background-color: #55585a7a;
+      .menu-warp {
+        .menu-item {
+          height: 50px;
+          line-height: 50px;
+          a {
+            font-size: 16px;
+            color: #fff;
+            padding-left: 30px;
+            position: relative;
+            display: block;
+            &::after {
+              content: "";
+              @include bgImg(10px, 15px, "/imgs/icon-arrow.png");
+              position: absolute;
+              top: 17.5px;
+              right: 30px;
+            }
+          }
+          &:hover {
+            background-color: $colorA;
+            .children {
+              display: block;
+            }
+          }
+          .children {
+            display: none;
+            height: 451px;
+            width: 962px;
+            background-color: $colorG;
+            position: absolute;
+            left: 264px;
+            top: 0;
+            border: 1px solid #e5e5e5;
+            ul {
+              display: flex;
+              justify-content: space-between;
+              height: 75px;
+              li {
+                height: 75px;
+                line-height: 75px;
+                flex: 1;
+                padding-left: 23px;
+              }
+              a {
+                color: $colorB;
+                font-size: 14px;
+              }
+              img {
+                width: 42px;
+                height: 35px;
+                vertical-align: middle;
+                margin-right: 15px;
+              }
+            }
+          }
+        }
+      }
+    }
     .swiper-container {
       height: 451px;
+      .swiper-button-prev {
+        left: 274px;
+      }
       img {
         width: 100%;
         height: 100%;
