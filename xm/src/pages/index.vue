@@ -42,6 +42,7 @@
             </li>
           </ul>
         </div>
+        <!-- 轮播 -->
         <swiper :options="swiperOption">
           <swiper-slide v-for="(item, index) in slideList" :key="index">
             <a :href="`/#/product/${item.id}`">
@@ -54,23 +55,81 @@
           <div class="swiper-button-next" slot="button-next"></div>
         </swiper>
       </div>
-      <div class="ads-box"></div>
-      <div class="banner"></div>
-      <div class="product-box"></div>
+      <div class="ads-box">
+        <a
+          :href="`/#/product/${item.id}`"
+          v-for="(item, index) in adsList"
+          :key="index"
+        >
+          <img v-lazy="item.img" />
+        </a>
+      </div>
+      <div class="banner">
+        <a href="/#/product/30">
+          <img v-lazy="'/imgs/banner-1.png'" />
+        </a>
+      </div>
+    </div>
+    <div class="product-box">
+      <div class="container">
+        <h2>手机</h2>
+        <div class="wrapper">
+          <div class="banner-left">
+            <a href="/#/product/35">
+              <img v-lazy="'/imgs/mix-alpha.jpg'" />
+            </a>
+          </div>
+          <div class="list-box">
+            <div class="list" v-for="(arr, index) in phoneList" :key="index">
+              <div class="item" v-for="(item, i) in arr" :key="i">
+                <span :class="{ 'new-pro': i % 2 == 0 }">新品</span>
+                <div class="item-img">
+                  <img v-lazy="item.mainImage" />
+                </div>
+                <div class="item-info">
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.subtitle }}</p>
+                  <p class="price" @click="addCart(item.id)">
+                    {{ item.price }}元
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <service-bar></service-bar>
+    <!-- 接收子组件传的方法名 直接定义方法 自定义事件使用v-on
+    将值传给子组件例：title="提示"
+    -->
+    <modal
+      title="提示"
+      sureText="查看购物车"
+      btnType="1"
+      modalType="middle"
+      v-bind:showModal="showModal"
+      v-on:submit="goToCart"
+      v-on:cancel="showModal = false"
+    >
+      <template v-slot:body>
+        <p>商品添加成功</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 import ServiceBar from "../components/ServiceBar";
+import Modal from "../components/Modal";
 export default {
   name: "index",
   components: {
     swiper,
     swiperSlide,
     ServiceBar,
+    Modal,
   },
   data() {
     return {
@@ -147,7 +206,61 @@ export default {
         [0, 0, 0, 0],
         [0, 0, 0, 0],
       ],
+      adsList: [
+        {
+          id: 33,
+          img: "/imgs/ads/ads-1.png",
+        },
+        {
+          id: 48,
+          img: "/imgs/ads/ads-2.jpg",
+        },
+        {
+          id: 45,
+          img: "/imgs/ads/ads-3.png",
+        },
+        {
+          id: 47,
+          img: "/imgs/ads/ads-4.jpg",
+        },
+      ],
+      phoneList: [],
+      showModal: false,
     };
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      this.axios
+        .get("/products", {
+          params: {
+            categoryId: "100012",
+            pageSize: 14,
+          },
+        })
+        .then((res) => {
+          res.list = res.list.slice(6, 14);
+          this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
+        });
+    },
+    goToCart() {
+      this.$router.push("/cart");
+    },
+    addCart() {
+      this.showModal = true;
+      return;
+      // this.axios
+      //   .post("/carts", {
+      //     productId: id,
+      //     selected: true,
+      //   })
+      //   .then((res) => {})
+      //   .catch((res) => {
+      //     this.showModal = true;
+      //   });
+    },
   },
 };
 </script>
@@ -155,6 +268,7 @@ export default {
 @import "../assets/scss/mixin.scss";
 @import "../assets/scss/config.scss";
 .index {
+  // 导航菜单
   .swiper-box {
     .nav-menu {
       position: absolute;
@@ -229,6 +343,100 @@ export default {
       img {
         width: 100%;
         height: 100%;
+      }
+    }
+  }
+  .ads-box {
+    @include flex();
+    margin-top: 14px;
+    margin-bottom: 31px;
+    a {
+      width: 296px;
+      height: 167px;
+    }
+  }
+  .banner {
+    margin-bottom: 50px;
+  }
+  .product-box {
+    background-color: $colorJ;
+    padding: 30px 0 50px;
+    h2 {
+      font-size: $fontF;
+      height: 21px;
+      line-height: 21px;
+      color: $colorB;
+      margin-bottom: 20px;
+    }
+    .wrapper {
+      display: flex;
+      .banner-left {
+        margin-right: 16px;
+        img {
+          width: 224px;
+          height: 619px;
+        }
+      }
+      .list-box {
+        .list {
+          @include flex();
+          width: 986px;
+          margin-bottom: 14px;
+          &:last-child {
+            margin-bottom: 0px;
+          }
+          .item {
+            width: 236px;
+            height: 302px;
+            background-color: $colorG;
+            text-align: center;
+            span {
+              display: inline-block;
+              width: 67px;
+              height: 24px;
+              font-size: 14px;
+              line-height: 24px;
+              color: $colorG;
+              &.new-pro {
+                background-color: #7ecf68;
+              }
+              &.kill-pro {
+                background-color: #e82626;
+              }
+            }
+            .item-img {
+              img {
+                height: 195px;
+                width: 100%;
+              }
+            }
+            .item-info {
+              h3 {
+                font-size: $fontJ;
+                color: $colorB;
+                line-height: $fontJ;
+                font-weight: bold;
+              }
+              p {
+                color: $colorD;
+                line-height: 13px;
+                margin: 6px auto 13px;
+              }
+              .price {
+                color: #f20a0a;
+                font-size: $fontJ;
+                font-weight: bold;
+                cursor: pointer;
+                &::after {
+                  @include bgImg(22px, 22px, "/imgs/icon-cart-hover.png");
+                  content: "";
+                  margin-left: 15px;
+                  vertical-align: middle;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
